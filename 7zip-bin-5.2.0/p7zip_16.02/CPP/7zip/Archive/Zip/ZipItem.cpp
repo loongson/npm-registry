@@ -254,7 +254,8 @@ void CItem::GetUnicodeString(UString &res, const AString &s, bool isComment, boo
   // Use system locale to select code page
 
   Byte hostOS = GetHostOS();
-  if (!isUtf8 && ((hostOS == NFileHeader::NHostOS::kFAT) || (hostOS == NFileHeader::NHostOS::kNTFS))) {
+  if (!isUtf8 && ((hostOS == NFileHeader::NHostOS::kFAT) || (hostOS == NFileHeader::NHostOS::kNTFS) 
+			  || (hostOS == NFileHeader::NHostOS::EEnum::kUnix))) {
 
     const char *oemcp;
     oemcp = getenv("OEMCP");
