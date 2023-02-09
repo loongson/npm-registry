@@ -75,6 +75,7 @@
             this.PLATFORM_ARCHITECTURE_X64 = "x64";
             this.PLATFORM_ARCHITECTURE_ARM = "arm";
             this.PLATFORM_ARCHITECTURE_ARM64 = "arm64";
+            this.PLATFORM_ARCHITECTURE_LOONGARCH64 = "loong64";
             this.PLATFORM_ARCHITECTURE_UNKNOWN = "unknown";
     
             this.ERROR_RUNTIME_NOT_SUPPORTED = "error-runtime-not-supported";
@@ -730,6 +731,8 @@
                             return singleton.PLATFORM_ARCHITECTURE_X86;
                         case "x64":
                             return singleton.PLATFORM_ARCHITECTURE_X64;
+                        case "loong64":
+                            return singleton.PLATFORM_ARCHITECTURE_LOONGARCH64;
                         default:
                             return singleton.PLATFORM_ARCHITECTURE_UNKNOWN;
                     }
