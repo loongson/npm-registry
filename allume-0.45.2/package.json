@@ -1,0 +1,61 @@
+{
+  "name": "allume",
+  "main": "index.html",
+  "version": "0.45.2",
+  "description": "A cross-platform package bootloader for javascript.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/create-conform/allume.git"
+  },
+  "bin": {
+    "allume": "run.js"
+  },
+  "keywords": [
+    "pkx",
+    "using",
+    "bootloader",
+    "package",
+    "module"
+  ],
+  "author": "Nick Verlinden",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/create-conform/allume/issues"
+  },
+  "homepage": "https://github.com/create-conform/allume#readme",
+  "pkx" : {
+    "dependencies": [
+      "cc.type.0.2",
+      "cc.error.0.2",
+      "cc.pkx.0.2",
+      "allume.request.github.0.2",
+      "allume.request.gitlab.0.2",
+      "allume.request.bitbucket.0.2",
+      "allume.request.file-system.0.2",
+      "cc.io.http.0.2",
+      "cc.io.file-system.0.2",
+      "cc.config.0.2",
+      "cc.cli.0.2"
+    ]
+  },
+  "optionalDependencies": {
+    "nw": "0.21.6-sdk"
+  },
+  "node-remote": ["http://*", "https://*"],
+  "webkit": {
+    "plugin": true,
+    "page-cache": false
+  },
+  "window": {
+    "transparent": false,
+    "always_on_top": false,
+    "frame": true,
+    "position": "center",
+    "show_in_taskbar": false,
+    "show": false,
+    "icon": "res/allume-icon-256.png",
+    "width": 720,
+    "height": 480,
+    "resizable": false
+  }
+}
