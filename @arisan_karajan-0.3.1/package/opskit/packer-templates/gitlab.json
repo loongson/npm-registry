@@ -1,0 +1,84 @@
+{
+  "variables": {
+    "source_image": "",
+    "project_id": "{{env `PROJECT_ID`}}",
+    "zone": "{{env `ZONE`}}",
+    "consul_version": "0.7.0",
+    "target_image_name": "{{env `TARGET_IMAGE_NAME`}}",
+    "gitlab_dns": "{{env `GITLAB_DNS`}}",
+    "vault_version": "0.6.2",
+    "vault_addr": "{{env `VAULT_ADDR`}}",
+    "vault_backend": "{{env `VAULT_BACKEND`}}",
+    "vault_namespace": "{{env `VAULT_NAMESPACE`}}",
+    "vault_role_id": "{{env `VAULT_ROLE_ID`}}",
+    "maintainer": "{{env `MAINTAINER`}}",
+    "restore_timestamp": "{{env `RESTORE_TIMESTAMP`}}"
+  },
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "{{user `project_id`}}",
+      "source_image": "{{user `source_image`}}",
+      "zone": "{{user `zone`}}",
+      "disk_type": "pd-ssd",
+      "image_family": "{{user `vault_namespace`}}",
+      "image_name": "{{user `target_image_name`}}",
+      "ssh_username": "ubuntu"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline_shebang": "/bin/bash -ex",
+      "inline": [
+        "sleep 30",
+        "sudo timedatectl set-timezone Asia/Taipei",
+        "echo 'GITLAB_DNS={{user `gitlab_dns`}}' | sudo tee -a /root/.profile",
+        "echo 'VAULT_ADDR={{user `vault_addr`}}' | sudo tee -a /root/.profile",
+        "echo 'VAULT_BACKEND={{user `vault_backend`}}' | sudo tee -a /root/.profile",
+        "echo 'VAULT_NAMESPACE={{user `vault_namespace`}}' | sudo tee -a /root/.profile",
+        "echo 'VAULT_ROLE_ID={{user `vault_role_id`}}' | sudo tee -a /root/.profile",
+        "sudo apt-get update",
+        "sudo apt-get upgrade -y",
+        "sudo apt-get install -y curl openssh-server ca-certificates unzip git",
+        "curl -#sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash",
+        "sudo apt-get install gitlab-ce",
+        "sudo gitlab-ctl reconfigure",
+        "curl -O https://releases.hashicorp.com/vault/{{user `vault_version`}}/vault_{{user `vault_version`}}_linux_amd64.zip",
+        "unzip *.zip; sudo mv vault /usr/local/bin/; rm *.zip",
+        "bucket_url=$(gsutil ls gs://{{user `vault_namespace`}}/{{user `restore_timestamp`}}*); echo $bucket_url",
+        "sudo gsutil cp $bucket_url /var/opt/gitlab/backups/",
+        "sudo gitlab-ctl stop unicorn",
+        "sudo gitlab-ctl stop sidekiq",
+        "sudo gitlab-rake gitlab:backup:restore force=yes",
+        "sudo gitlab-ctl start",
+        "sudo gitlab-rake gitlab:check SANITIZE=true"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "etc-gitlab.tar",
+      "destination": "/tmp/etc-gitlab.tar"
+    },
+    {
+      "type": "file",
+      "source": "home-{{user `maintainer`}}-ssh.tar",
+      "destination": "/tmp/home-{{user `maintainer`}}-ssh.tar"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo adduser --disabled-password --gecos '' {{user `maintainer`}}",
+        "sudo mv /etc/gitlab /etc/gitlab.default",
+        "sudo tar -xvf /tmp/etc-gitlab.tar -C /",
+        "sudo tar -xvf /tmp/home-{{user `maintainer`}}-ssh.tar -C /",
+        "sudo rm /tmp/*.tar",
+        "sudo gitlab-ctl reconfigure",
+        "cd /home/{{user `maintainer`}}",
+        "echo 'if [[ ! -d \"${HOME}/bin\" ]]; then' | sudo tee -a .profile",
+        "echo '  git clone git@{{user `gitlab_dns`}}:utils/opskit.git ${HOME}/bin --recursive' | sudo tee -a .profile",
+        "echo 'fi' | sudo tee -a .profile"
+      ]
+    }
+  ]
+}

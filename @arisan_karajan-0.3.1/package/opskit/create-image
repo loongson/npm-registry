@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+#
+## Create image on specified IaaS given a Packer template
+
+opskit_path="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
+source ${opskit_path}/lib/common.sh
+
+## Check if gcloud command exists
+if ! command_exists "gcloud"; then
+  log_e 'gcloud Command Not Found'; exit 1
+fi
+
+## Validate environment context
+if [[ -z "${PACKER_TEMPLATE}" ]]; then
+  log_e 'Packer Template Unspecified'; exit 1
+else
+  if [[ ! -f "${PACKER_TEMPLATE}" ]]; then
+    log_e "Packer Template ${packer_template} Not Found"; exit 1
+  else
+    if ! [[ ${PACKER_TEMPLATE,,} =~ \.json$ ]]; then
+      log_e 'Packer Template should have JSON extension.'; exit 1
+    fi
+  fi
+fi
+if [[ -z "${PROJECT_ID}" ]]; then
+  log_e 'Project ID Unspecified'; exit 1
+fi
+if [[ -z "${TARGET_IMAGE_NAME}" ]]; then
+  log_e 'Image Name Unspecified'; exit 1
+fi
+if [[ -z "${ZONE}" ]]; then
+  log_e 'Zone Unspecified'; exit 1
+fi
+if [[ ! -z "${ACCOUNT_FILE}" ]] && [[ ! -f "${ACCOUNT_FILE}" ]]; then
+  log_e "Account File ${ACCOUNT_FILE} Not Found"; exit 1
+fi
+
+source_image=$(gcloud compute images list --format="(name)" | grep trusty)
+
+${opskit_path}/ext/packer validate -var "source_image=${source_image}" \
+  "${PACKER_TEMPLATE}"
+validation_error=$?
+if [[ ${validation_error} != 0 ]]; then
+  exit 1
+fi
+
+${opskit_path}/ext/packer build -var "source_image=${source_image}" \
+  "${PACKER_TEMPLATE}"

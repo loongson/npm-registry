@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+## Proxy packer command for different OSes
+
+EXTPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
+
+case $(uname) in
+  'Linux')
+    ${EXTPATH}/packer-0.12.1-linux-amd64 "$@"; exit $?
+    ;;
+  'Darwin')
+    ${EXTPATH}/packer-0.12.1-darwin-amd64 "$@"; exit $?
+    ;;
+  \?)
+    echo 'OS Not Supported'; exit 1
+    ;;
+esac

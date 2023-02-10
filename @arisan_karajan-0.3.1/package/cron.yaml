@@ -1,0 +1,9 @@
+cron:
+  - description: Check and recover unserviced cameras
+    url: /uncoordinated-services?command=recover
+    schedule: every 5 minutes
+    target: karajan
+  - description: Check and prune services
+    url: /uncoordinated-services?command=prune
+    schedule: every 61 minutes
+    target: karajan

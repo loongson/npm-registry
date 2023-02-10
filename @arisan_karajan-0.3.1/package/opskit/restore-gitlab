@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+#
+## Restore gitlab server and configurations on a new instance
+## This script is to be executed directly on Arisan's gitlab server as root.
+
+## Set to abort if any command fails
+set -e
+set -o pipefail
+
+opskit_path="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
+source ${opskit_path}/lib/common.sh
+
+## Check script is being run as root
+if [[ ${EUID} -ne 0 ]]; then
+  log_e "This script must be run as root." 1>&2; exit 1
+fi
+
+## Validate environment variables
+export MAINTAINER=${SUDO_USER:-${USER}}
+if [[ -z "${MAINTAINER}" ]]; then
+  log_e "MAINTAINER Not Set"; exit 1
+fi
+if [[ -z "${GITLAB_DNS}" ]]; then
+  export GITLAB_DNS=$(su - root -c 'echo ${GITLAB_DNS}')
+  if [[ -z "${GITLAB_DNS}" ]]; then
+    log_e "GITLAB_DNS Not Set"; exit 1
+  fi
+fi
+if [[ -z "${VAULT_ADDR}" ]]; then
+  export VAULT_ADDR=$(su - root -c 'echo ${VAULT_ADDR}')
+  if [[ -z "${VAULT_ADDR}" ]]; then
+    log_e "VAULT_ADDR Not Set"; exit 1
+  fi
+fi
+export VAULT_BACKEND=$(su - root -c 'echo ${VAULT_BACKEND}')
+if [[ -z "${VAULT_BACKEND}" ]]; then
+  log_e "VAULT_BACKEND Not Set"; exit 1
+fi
+export VAULT_NAMESPACE=$(su - root -c 'echo ${VAULT_NAMESPACE}')
+if [[ -z "${VAULT_NAMESPACE}" ]]; then
+  log_e "VAULT_NAMESPACE Not Set"; exit 1
+fi
+export VAULT_ROLE_ID=$(su - root -c 'echo ${VAULT_ROLE_ID}')
+if [[ -z "${VAULT_ROLE_ID}" ]]; then
+  log_e "VAULT_ROLE_ID Not Set"; exit 1
+fi
+
+## Login to vault server
+export VAULT_TOKEN=$(vault write -field=token auth/approle/login \
+  role_id=${VAULT_ROLE_ID})
+## Retrieve latest backup timestamp for restoration
+timestamp_keys=$(vault list -format=yaml ${VAULT_BACKEND}/${VAULT_NAMESPACE})
+latest_timestamp_key=$(echo "${timestamp_keys}" | sort -k2 | tail -n 1)
+latest_timestamp=$(echo "${latest_timestamp_key}" | sed 's|[^0-9]||g')
+log_i "Retrieving backup for timestamp ${latest_timestamp}"
+export RESTORE_TIMESTAMP=${latest_timestamp}
+## Retrieve latest backup
+vault read -field=value \
+  ${VAULT_BACKEND}/${VAULT_NAMESPACE}/${RESTORE_TIMESTAMP}/etc-gitlab | \
+  base64 -d > etc-gitlab.tar
+vault read -field=value \
+  ${VAULT_BACKEND}/${VAULT_NAMESPACE}/${RESTORE_TIMESTAMP}/etc-ssh | \
+  base64 -d > etc-ssh.tar
+vault read -field=value \
+  ${VAULT_BACKEND}/${VAULT_NAMESPACE}/${RESTORE_TIMESTAMP}/home-${MAINTAINER}-ssh | \
+  base64 -d > home-${MAINTAINER}-ssh.tar
+
+export TARGET_IMAGE_NAME="${VAULT_NAMESPACE}-${latest_timestamp}"
+export PROJECT_ID=$(curl -H 'Metadata-Flavor: Google' \
+  http://metadata.google.internal/computeMetadata/v1/project/project-id)
+if [[ -z "${GITLAB_ZONE}" ]]; then
+  export ZONE=$(curl -s -H 'Metadata-Flavor: Google' \
+    http://metadata.google.internal/computeMetadata/v1/instance/zone | \
+    cut -d'/' -f 4)
+else
+  export ZONE=${GITLAB_ZONE}
+fi
+## Create new gitlab image
+export PACKER_TEMPLATE=${opskit_path}/packer-templates/gitlab.json
+${opskit_path}/create-image
+
+rm etc-gitlab.tar
+rm home-${MAINTAINER}-ssh.tar
+
+if [[ -z "${GITLAB_SERVICE_ACCOUNT}" ]]; then
+  GITLAB_SERVICE_ACCOUNT=$(curl -s -H 'Metadata-Flavor: Google' \
+    http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/ | \
+    grep -v default/ | \
+    sed 's|/||')
+fi
+
+## Create new gitlab instance
+gcloud compute --project ${PROJECT_ID} instances create gitlab-${latest_timestamp} \
+  --no-boot-disk-auto-delete \
+  --boot-disk-size 30GB \
+  --boot-disk-type pd-ssd \
+  --custom-cpu 2 \
+  --custom-memory 8GiB \
+  --image /${PROJECT_ID}/${TARGET_IMAGE_NAME} \
+  --image-project ${PROJECT_ID} \
+  --scopes ${GITLAB_SERVICE_ACCOUNT}="https://www.googleapis.com/auth/cloud-platform" \
+  --tags "http-server" \
+  --zone ${ZONE}
+
+## Delete the gitlab image just used
+gcloud compute images delete /${PROJECT_ID}/${TARGET_IMAGE_NAME} --quiet
+
+## Replace ssh host keys
+sleep 30
+gcloud compute copy-files \
+  etc-ssh.tar \
+  ubuntu@gitlab-${latest_timestamp}:/tmp/etc-ssh.tar \
+  --zone ${ZONE}
+gcloud compute ssh ubuntu@gitlab-${latest_timestamp} --zone ${ZONE} \
+  -- sudo bash <<HERE
+  mv /etc/ssh /etc/ssh.default
+  tar -xvf /tmp/etc-ssh.tar -C /
+  rm /tmp/*.tar
+HERE
+rm etc-ssh.tar
+
+log_i 'GitLab restoration is now complete. It is now safe to delete the'
+log_i 'previous GitLab instance and disk. Remember to migrate the  static IP'
+log_i 'over from the previous GitLab instance.'

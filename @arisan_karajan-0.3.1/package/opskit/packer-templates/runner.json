@@ -1,0 +1,68 @@
+{
+  "variables": {
+    "project_id": "{{env `PROJECT_ID`}}",
+    "registration_token": "{{env `REGISTRATION_TOKEN`}}",
+    "npmrc": "{{env `NPMRC`}}"
+  },
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "{{user `project_id`}}",
+      "source_image_family": "ubuntu-1404-lts",
+      "zone": "us-west1-a",
+      "disk_type": "pd-ssd",
+      "image_family": "runner",
+      "image_name": "runner-{{timestamp}}",
+      "ssh_username": "ubuntu"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline_shebang": "/bin/bash -e",
+      "inline": [
+        "sleep 30",
+        "sudo timedatectl set-timezone Asia/Taipei",
+        "echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections",
+        "sudo add-apt-repository ppa:webupd8team/java",
+        "curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner/script.deb.sh | sudo bash",
+        "sudo add-apt-repository ppa:git-core/ppa",
+        "sudo apt-get update",
+        "sudo apt-get upgrade --yes",
+        "sudo apt-get install --yes oracle-java8-installer",
+        "sudo apt-get install --yes oracle-java8-set-default",
+        "sudo apt-get install --yes gitlab-ci-multi-runner",
+        "sudo apt-get install --yes git",
+        "sudo mkdir -p /tmp"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "runner/etc-init-register.conf",
+      "destination": "/tmp/etc-init-register.conf"
+    },
+    {
+      "type": "file",
+      "source": "runner/usr-local-bin-unregister",
+      "destination": "/tmp/usr-local-bin-unregister"
+    },
+    {
+      "type": "shell",
+      "inline_shebang": "/bin/bash -e",
+      "inline": [
+        "sed -i \"s!%REGISTRATION_TOKEN%!{{user `registration_token`}}!g\" /tmp/etc-init-register.conf",
+        "sudo mv /tmp/etc-init-register.conf /etc/init/register.conf",
+        "sudo mv /tmp/usr-local-bin-unregister /usr/local/bin/unregister",
+        "sudo apt-get install --yes build-essential cmake pkg-config libssl-dev autoconf yasm libtool libbz2-dev unzip jq apache2-utils lcov",
+        "sudo curl -O https://releases.hashicorp.com/vault/0.6.4/vault_0.6.4_linux_amd64.zip",
+        "sudo unzip vault_0.6.4_linux_amd64.zip",
+        "sudo mv vault /usr/local/bin/",
+        "sudo gcloud components update --quiet",
+        "sudo su - gitlab-runner -c 'curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash'",
+        "sudo su - gitlab-runner -c 'echo {{user `npmrc`}} > ~/.npmrc'",
+        "sudo su - gitlab-runner -c 'curl https://install.meteor.com/ | sh'",
+        "sudo su - gitlab-runner -c 'echo PATH=\\$HOME/.meteor/:\\$PATH >> /home/gitlab-runner/.profile'"
+      ]
+    }
+  ]
+}

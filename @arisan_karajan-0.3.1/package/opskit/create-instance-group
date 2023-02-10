@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+opskit_path="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
+source ${opskit_path}/lib/common.sh
+
+## Check if gcloud command exists
+if ! command_exists "gcloud"; then
+  log_e 'gcloud Command Not Found'; exit 1
+fi
+
+## Define names to be used
+IF=$'\n' old_templates=$(gcloud compute instance-templates list --regexp=^"${MODULE_NAME}".* --format='value(name)')
+echo "Old Templates: "${old_templates}
+new_template="${MODULE_NAME}-template-${CI_BUILD_ID}"
+echo "New Template: ${new_template}"
+IFS=$'\n' old_groups=$(gcloud compute instance-groups list --regexp=^"${MODULE_NAME}".* --format='value(name)')
+echo "Old Groups: "${old_groups}
+new_group="${MODULE_NAME}-group-${CI_BUILD_ID}"
+echo "New Group: ${new_group}"
+if [[ "${MODULE_NAME}" -eq 'data-api' ]]; then
+  dns_name=$(gcloud dns managed-zones describe ${PROJECT_ID} --format='value(dnsName)')
+  echo "DNS Name: ${dns_name}"
+fi
+
+## Create instance template
+latest_image=$(gcloud compute images describe-from-family ${MODULE_NAME} --format='value(name)')
+echo "Latest Image: ${latest_image}"
+gcloud compute instance-templates create ${new_template} \
+  --machine-type "$MACHINE_TYPE" \
+  --image ${latest_image} \
+  --boot-disk-type pd-ssd \
+  --tags "http-server"
+
+## Create instance group
+gcloud compute instance-groups managed create ${new_group} \
+  --base-instance-name ${MODULE_NAME}-${CI_BUILD_ID} \
+  --template ${new_template} \
+  --size "$GROUP_SIZE"
+gcloud compute instance-groups managed wait-until-stable ${new_group}
+sleep 10
+
+
+## Update DNS record set if data-api
+if [[ "${MODULE_NAME}" -eq 'data-api' ]]; then
+  gcloud dns record-sets transaction start -z ${PROJECT_ID}
+  ## Delete existing DNS records
+  IFS=';' existing_ips=$(gcloud dns record-sets list -z ${PROJECT_ID} --name=${dns_name} --type=A --format='value(rrdatas.map().list())')
+  echo "To remove "${existing_ips}" from ${dns_name}"
+  gcloud dns record-sets transaction remove -z ${PROJECT_ID} --name ${dns_name} --type A --ttl 300 ${existing_ips}
+  ## Add DNS records
+  IFS=$'\n'
+  new_ips=''
+  for new_instance in $(gcloud compute instance-groups managed list-instances ${new_group} --format='value(instance)'); do
+    new_ips="${new_ips} $(gcloud compute instances describe ${new_instance} --format='value(networkInterfaces[0].accessConfigs[0].natIP)')"
+    echo "To add "${new_ips}" to ${dns_name}"
+  done
+  gcloud dns record-sets transaction add -z ${PROJECT_ID} --name ${dns_name} --ttl 300 --type A ${new_ips}
+  gcloud dns record-sets transaction execute -z ${PROJECT_ID}
+fi
+
+## Delete old instance group
+if [ ! -z "${old_templates}" ]; then
+  gcloud compute instance-groups managed delete ${old_groups} --quiet
+fi
+
+# Delete old templates
+if [ ! -z "${old_templates}" ]; then
+  gcloud compute instance-templates delete ${old_templates} --quiet
+fi

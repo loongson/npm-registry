@@ -1,0 +1,3 @@
+#!/bin/bash
+
+gitlab-ci-multi-runner unregister --name=$(hostname)

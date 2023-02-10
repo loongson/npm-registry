@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+opskit_path="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
+source ${opskit_path}/lib/common.sh
+
+## Check script is being run with sudo
+if [[ ${EUID} -ne 0 ]]; then
+  log_e "Permission denied. Please try again with sudo." 1>&2; exit 1
+fi
+
+## Update repo recursively
+cd ${opskit_path}
+user=${SUDO_USER:-${USER}}
+sudo -u ${user} git pull
+sudo -u ${user} git submodule update --init --recursive
+cd -

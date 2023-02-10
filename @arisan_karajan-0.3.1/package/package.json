@@ -1,0 +1,56 @@
+{
+  "name": "@arisan/karajan",
+  "version": "0.3.1",
+  "description": "CLiO Karajan Service",
+  "homepage": "http://source.arisan.io/clio/karajan",
+  "bugs": "http://source.arisan.io/clio/karajan/issues",
+  "license": "UNLICENSED",
+  "contributors": [
+    "David Tang <davidt@arisan.io>"
+  ],
+  "main": "lib/Karajan.js",
+  "bin": {
+    "karajan": "./server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@source.arisan.io:clio/karajan.git"
+  },
+  "scripts": {
+    "cover": "istanbul cover _mocha",
+    "lint": "eslint ./",
+    "prepublish": "npm run transpile",
+    "pretest": "npm run transpile",
+    "test": "mocha",
+    "transpile": "rm -rf lib && babel src --out-dir lib --source-maps",
+    "watch": "npm run transpile -- --watch"
+  },
+  "dependencies": {
+    "@google-cloud/logging": "^0.7.1",
+    "@google-cloud/pubsub": "^0.8.3",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "mongodb": "^2.2.24",
+    "superagent": "^3.5.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-preset-es2015-node6": "^0.4.0",
+    "chai": "^3.5.0",
+    "eslint": "^3.17.1",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-mocha": "^4.8.0",
+    "eslint-plugin-react": "^6.10.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "supertest": "^3.0.0"
+  },
+  "engines": {
+    "node": "^6.9.4"
+  },
+  "os": [
+    "linux"
+  ]
+}

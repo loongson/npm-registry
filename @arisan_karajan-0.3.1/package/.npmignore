@@ -1,0 +1,5 @@
+src
+.idea
+lib
+coverage
+.gitlab-ci.yml

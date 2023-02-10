@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+#
+## Backup gitlab server data and configurations incl. /etc/gitlab and /etc/ssh
+## This script is to be executed directly on Arisan's gitlab server as root.
+
+## Set to abort if any command fails
+set -e
+set -o pipefail
+
+opskit_path="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
+source ${opskit_path}/lib/common.sh
+
+show_usage() {
+  echo "usage: $(basename $0) [ -h show_usage ]"
+}
+
+## Parse arguments
+while getopts ':h' opt; do
+  case ${opt} in
+    h)
+      show_usage; exit 1
+      ;;
+    \?)
+      log_e "Invalid Option: -${OPTARG}"; exit 1
+      ;;
+    :)
+      log_e "Option -${OPTARG} requires an argument." >&2; exit 1
+      ;;
+  esac
+done
+
+## Check if gitlab-rake command exists
+if ! command_exists "gitlab-rake"; then
+  log_e 'gitlab-rake Command Not Found'; exit 1
+fi
+
+## Check if gsutil command exists
+if ! command_exists "gsutil"; then
+  log_e 'gsutil Command Not Found'; exit 1
+fi
+
+## Check if vault command exists
+if ! command_exists "vault"; then
+  log_e 'vault Command Not Found'; exit 1
+fi
+
+## Check script is being run as root
+if [[ ${EUID} -ne 0 ]]; then
+  log_e "This script must be run as root." 1>&2; exit 1
+fi
+
+## Validate environment variables
+export MAINTAINER=${SUDO_USER:-${USER}}
+if [[ -z "${MAINTAINER}" ]]; then
+  log_e "MAINTAINER Not Set"; exit 1
+fi
+export VAULT_ADDR=$(su - root -c 'echo ${VAULT_ADDR}')
+if [[ -z "${VAULT_ADDR}" ]]; then
+  log_e "VAULT_ADDR Not Set"; exit 1
+fi
+VAULT_BACKEND=$(su - root -c 'echo ${VAULT_BACKEND}')
+if [[ -z "${VAULT_BACKEND}" ]]; then
+  log_e "VAULT_BACKEND Not Set"; exit 1
+fi
+VAULT_NAMESPACE=$(su - root -c 'echo ${VAULT_NAMESPACE}')
+if [[ -z "${VAULT_NAMESPACE}" ]]; then
+  log_e "VAULT_NAMESPACE Not Set"; exit 1
+fi
+VAULT_ROLE_ID=$(su - root -c 'echo ${VAULT_ROLE_ID}')
+if [[ -z "${VAULT_ROLE_ID}" ]]; then
+  log_e "VAULT_ROLE_ID Not Set"; exit 1
+fi
+
+## Backup and upload gitlab application data
+gitlab-rake gitlab:backup:create SKIP=artifacts
+latest_backup=$(ls -t /var/opt/gitlab/backups | head -n1)
+echo "Uploading $latest_backup...."
+sudo gsutil cp /var/opt/gitlab/backups/$latest_backup gs://io-arisan-gitlab
+
+## Create tarballs for
+##   /etc/gitlab
+##   /etc/ssh directory
+##   /home/${MAINTAINER}/.ssh
+now=$(ls -tr /var/opt/gitlab/backups | tail -n 1 | cut -d'_' -f 1)
+etc_gitlab_tarball="etc-gitlab-${now}.tar"
+etc_ssh_tarball="etc-ssh-${now}.tar"
+home_maintainer_ssh_tarball="home-maintainer-ssh-${now}.tar"
+tar -cf ${etc_gitlab_tarball} -C / etc/gitlab
+tar -cf ${etc_ssh_tarball} -C / etc/ssh
+tar -cf ${home_maintainer_ssh_tarball} -C / home/${MAINTAINER}/.ssh
+## Login to vault server
+export VAULT_TOKEN=$(vault write -field=token auth/approle/login \
+  role_id=${VAULT_ROLE_ID})
+## Write tarballs to vault
+base64 ${etc_gitlab_tarball} | vault write \
+  ${VAULT_BACKEND}/${VAULT_NAMESPACE}/${now}/etc-gitlab value=-
+base64 ${etc_ssh_tarball} | vault write \
+  ${VAULT_BACKEND}/${VAULT_NAMESPACE}/${now}/etc-ssh value=-
+base64 ${home_maintainer_ssh_tarball} | vault write \
+  ${VAULT_BACKEND}/${VAULT_NAMESPACE}/${now}/home-${MAINTAINER}-ssh value=-
+## Remove tarballs from local disk
+rm ${etc_gitlab_tarball}
+rm ${etc_ssh_tarball}
+rm ${home_maintainer_ssh_tarball}
+

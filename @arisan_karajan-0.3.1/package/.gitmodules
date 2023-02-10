@@ -1,0 +1,3 @@
+[submodule "opskit"]
+	path = opskit
+	url = ../../utils/opskit.git

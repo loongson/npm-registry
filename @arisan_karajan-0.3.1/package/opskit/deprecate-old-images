@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+## Deprecate old images except the latest one
+
+set -e
+set -x
+
+opskit_path="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
+source ${opskit_path}/lib/common.sh
+
+if [[ -z $1 ]]; then
+        echo "Missing image family name"
+        exit 1;
+fi
+
+family=$1
+## Get the latest image from family
+latest_image=$(gcloud compute images describe-from-family "${family}" \
+        --format='value(name)')
+if [[ -z "${latest_image}" ]]; then
+        echo "No ${family} image exists."
+        exit 1;
+fi
+
+## Deprecate old images and skip latest one
+echo "Attempting to deprecate all ${family} images except the latest one...."
+images="$(gcloud compute images list --regexp=^${family}.* \
+        --format='value(name)')"
+if [ -z "${images}" ]; then
+        echo "No ${family} image available"
+        exit 1;
+fi
+
+echo Available images: ${images}
+for image in ${images}; do
+        if [[ "${image}" -ne "${latest_image}" ]]; then
+                gcloud compute images deprecate "${image}" \
+                        --state=DEPRECATED --replacement="${latest_image}"
+        fi
+done
+

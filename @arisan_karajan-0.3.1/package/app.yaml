@@ -1,0 +1,17 @@
+service: karajan
+runtime: nodejs
+env: flex
+automatic_scaling:
+  min_num_instances: 1
+  cpu_utilization:
+    target_utilization: 0.8
+env_variables:
+  CLIO_RECOVERY_TOPIC: 'clio-recovery'
+  CLIO_PRUNING_TOPIC: 'clio-pruning'
+skip_files:
+  - ^coverage.*
+  - ^node_modules.*
+  - ^opskit.*
+  - ^src.*
+  - ^test.*
+  - ^\..*

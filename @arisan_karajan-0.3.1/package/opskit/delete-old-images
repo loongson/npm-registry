@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#
+## Delete old images except the latest one
+
+opskit_path="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)"
+source ${opskit_path}/lib/common.sh
+
+if [[ -z $1 ]]; then
+  echo "Missing image family name"
+  exit 1;
+fi
+
+family=$1
+## Get the latest image from family
+latest_image=$(gcloud compute images describe-from-family "${family}" --format='value(name)')
+if [[ -z "${latest_image}" ]]; then
+  echo "No ${family} image exists."
+  exit 1;
+fi
+
+## Delete old images and skip latest one
+echo "Attempting to delete all ${family} images except the latest one...."
+images=$(gcloud compute images list --regexp=^${family}.* --format='value(name)')
+if [ -z "${images}" ]; then
+  echo "Old ${family} images not available"
+  exit 1;
+fi
+
+images_to_delete=''
+for old_image in ${images}; do
+  if [[ "${old_image}" -ne "${latest_image}" ]]; then
+    images_to_delete="${images_to_delete} ${old_image}"
+  fi
+  images
+done
+
+gcloud compute images delete "${images_to_delete}" --quiet
