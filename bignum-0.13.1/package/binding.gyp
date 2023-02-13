@@ -73,6 +73,13 @@
                     'openssl_config_path': '<(nodedir)/deps/openssl/config/powerpc64'
                   }
                 },
+              ],
+              [
+                'target_arch=="loong64"', {
+                  'variables': {
+                    'openssl_config_path': '<(nodedir)/deps/openssl/config/loongarch64'
+                  }
+                },
               ]
             ],
             'include_dirs': [
