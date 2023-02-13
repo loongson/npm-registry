@@ -7,7 +7,8 @@ var Arch;
     Arch[Arch["x64"] = 1] = "x64";
     Arch[Arch["armv7l"] = 2] = "armv7l";
     Arch[Arch["arm64"] = 3] = "arm64";
-    Arch[Arch["universal"] = 4] = "universal";
+    Arch[Arch["loongarch64"] = 4] = "loongarch64";
+    Arch[Arch["universal"] = 5] = "universal";
 })(Arch = exports.Arch || (exports.Arch = {}));
 function toLinuxArchString(arch, targetName) {
     switch (arch) {
@@ -19,13 +20,15 @@ function toLinuxArchString(arch, targetName) {
             return targetName === "snap" || targetName === "deb" ? "armhf" : targetName === "flatpak" ? "arm" : "armv7l";
         case Arch.arm64:
             return targetName === "pacman" || targetName === "flatpak" ? "aarch64" : "arm64";
+        case Arch.loongarch64:
+            return targetName === "pacman" || targetName === "flatpak" ? "loongarch64" : "loongarch64";
         default:
             throw new Error(`Unsupported arch ${arch}`);
     }
 }
 exports.toLinuxArchString = toLinuxArchString;
 function getArchCliNames() {
-    return [Arch[Arch.ia32], Arch[Arch.x64], Arch[Arch.armv7l], Arch[Arch.arm64]];
+    return [Arch[Arch.ia32], Arch[Arch.x64], Arch[Arch.armv7l], Arch[Arch.arm64], Arch[Arch.loongarch64]];
 }
 exports.getArchCliNames = getArchCliNames;
 function getArchSuffix(arch, defaultArch) {
@@ -42,6 +45,8 @@ function archFromString(name) {
             return Arch.arm64;
         case "armv7l":
             return Arch.armv7l;
+        case "loongarch64":
+            return Arch.loongarch64;
         case "universal":
             return Arch.universal;
         default:
@@ -85,6 +90,10 @@ function getArtifactArchName(arch, ext) {
             archName = "aarch64";
         }
     }
+    else if (arch === Arch.loongarch64) {
+        if (ext === "pacman" || ext === "rpm" || ext === "flatpak") {
+            archName = "loongarch64";
+        }
     return archName;
 }
 exports.getArtifactArchName = getArtifactArchName;
