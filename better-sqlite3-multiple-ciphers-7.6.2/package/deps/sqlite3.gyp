@@ -77,6 +77,14 @@
           'cflags!': ['-maes', '-msse4.2'],
           'cflags': ['-march=native'],
         }],
+        ['target_arch=="loong64"', {
+          'cflags!': ['-maes', '-msse4.2'],
+          'cflags': ['-march=native'],
+        }],
+        ['target_arch=="mips64el"', {
+          'cflags!': ['-maes', '-msse4.2'],
+          'cflags': ['-march=native'],
+        }],
       ],
       'configurations': {
         'Debug': {
