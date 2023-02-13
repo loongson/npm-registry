@@ -28,6 +28,8 @@ case "$OS" in
         # bittage of the userspace install (e.g. when running 32-bit userspace
         # on x86_64 kernel)
         exec "${THIS_DIR}/ninja-linux${LONG_BIT}" "$@";;
+      loongarch64)
+        exec "${THIS_DIR}/ninja-loongarch64" "$@";;
       *)
         echo Unknown architecture \($MACHINE\) -- unable to run ninja.
         print_help
