@@ -96,8 +96,8 @@ function getArtifactArchName(arch, ext) {
         }
     }
     else if (arch === Arch.loong64) {
-        if (ext === "pacman" || ext === "rpm" || ext === "deb" || ext === "flatpak") {
-            archName = "loongarch64";
+        if (ext === "pacman" || ext === "rpm" || ext === "flatpak") {
+            archName = "loong64";
         }
     }
     else if (arch === Arch.mips64el) {
