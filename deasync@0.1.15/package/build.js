@@ -32,6 +32,7 @@ if (!{
 		arm64: true,
 		ppc64: true,
 		ppc: true,
+		loong64: true,
 		s390x: true
 	}.hasOwnProperty(arch)) {
 	console.error('Unsupported (?) architecture: `' + arch + '`');
