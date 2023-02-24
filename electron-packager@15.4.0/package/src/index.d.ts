@@ -49,7 +49,7 @@ declare namespace electronPackager {
    * Architectures that have been supported by the official Electron prebuilt binaries, past
    * and present.
    */
-  type OfficialArch = 'ia32' | 'x64' | 'armv7l' | 'arm64' | 'mips64el';
+  type OfficialArch = 'ia32' | 'x64' | 'armv7l' | 'arm64' | 'mips64el' | 'loong64';
   /**
    * Platforms that have been supported by the official Electron prebuilt binaries, past and present.
    */
