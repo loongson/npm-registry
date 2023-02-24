@@ -13,7 +13,7 @@ bin.run(['-version']).then(() => {
   try {
     const src = fileURLToPath(new URL('../vendor/source/libwebp-1.1.0.tar.gz', import.meta.url));
     await binBuild.file(src, [
-      `./configure --disable-shared --prefix="${bin.dest()}" --bindir="${bin.dest()}"`,
+      `autoreconf -fiv && ./configure --disable-shared --prefix="${bin.dest()}" --bindir="${bin.dest()}"`,
       'make && make install',
     ]);
 
