@@ -1,14 +1,14 @@
 {
-  "name": "esbuild-linux-loong64",
-  "version": "0.12.12",
-  "description": "The Linux loong 64-bit binary for esbuild, a JavaScript bundler.",
+  "name": "esbuild-linux-arm64",
+  "version": "0.12.20",
+  "description": "The Linux ARM 64-bit binary for esbuild, a JavaScript bundler.",
   "repository": "https://github.com/evanw/esbuild",
   "license": "MIT",
   "os": [
     "linux"
   ],
   "cpu": [
-    "loong64"
+    "arm64"
   ],
   "directories": {
     "bin": "bin"
