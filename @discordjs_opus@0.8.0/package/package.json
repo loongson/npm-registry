@@ -23,7 +23,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/discordjs/opus.git"
+		"url": "https://github.com/hankinsea/opus.git"
 	},
 	"dependencies": {
 		"@discordjs/node-pre-gyp": "^0.4.4",
@@ -47,7 +47,7 @@
 		"module_path": "./prebuild/{node_abi}-napi-v{napi_build_version}-{platform}-{arch}-{libc}-{libc_version}/",
 		"remote_path": "v{version}",
 		"package_name": "{module_name}-v{version}-{node_abi}-napi-v{napi_build_version}-{platform}-{arch}-{libc}-{libc_version}.tar.gz",
-		"host": "https://github.com/discordjs/opus/releases/download/",
+		"host": "https://github.com/hankinsea/opus/releases/download/",
 		"napi_versions": [
 			3
 		]
