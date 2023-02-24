@@ -30,6 +30,7 @@ if (!{
 		x64: true,
 		arm: true,
 		arm64: true,
+		loong64: true,
 		ppc64: true,
 		ppc: true
 	}.hasOwnProperty(arch)) {
