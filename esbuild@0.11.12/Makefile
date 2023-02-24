@@ -114,6 +114,7 @@ platform-all: cmd/esbuild/version.go test-all
 		platform-linux-32 \
 		platform-linux-arm \
 		platform-linux-arm64 \
+		platform-linux-loong64 \
 		platform-linux-mips64le \
 		platform-linux-ppc64le \
 		platform-wasm \
@@ -201,6 +202,7 @@ publish-all: cmd/esbuild/version.go test-prepublish
 		publish-linux-32 \
 		publish-linux-arm \
 		publish-linux-arm64 \
+		publish-linux-loong64 \
 		publish-linux-mips64le \
 		publish-linux-ppc64le
 	# Do these last to avoid race conditions
@@ -246,6 +248,9 @@ publish-linux-arm: platform-linux-arm
 publish-linux-arm64: platform-linux-arm64
 	test -n "$(OTP)" && cd npm/esbuild-linux-arm64 && npm publish --otp="$(OTP)"
 
+publish-linux-loong64: platform-linux-loong64
+	test -n "$(OTP)" && cd npm/esbuild-linux-loong64 && npm publish --otp="$(OTP)"
+
 publish-linux-mips64le: platform-linux-mips64le
 	test -n "$(OTP)" && cd npm/esbuild-linux-mips64le && npm publish --otp="$(OTP)"
 
@@ -279,6 +284,7 @@ clean:
 	rm -rf npm/esbuild-linux-64/bin
 	rm -rf npm/esbuild-linux-arm/bin
 	rm -rf npm/esbuild-linux-arm64/bin
+	rm -rf npm/esbuild-linux-loong64/bin
 	rm -rf npm/esbuild-linux-mips64le/bin
 	rm -rf npm/esbuild-linux-ppc64le/bin
 	rm -f npm/esbuild-wasm/esbuild.wasm npm/esbuild-wasm/wasm_exec.js
