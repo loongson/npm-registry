@@ -26,7 +26,7 @@ let platform = process.platform;
 
 let chromedriver_version = process.env.npm_config_chromedriver_version || process.env.CHROMEDRIVER_VERSION || helper.version;
 if (platform === 'linux') {
-  if (process.arch === 'arm64' || process.arch === 'x64') {
+  if (process.arch === 'arm64' || process.arch === 'x64' || process.arch === 'loong64') {
     platform += '64';
   } else {
     console.log('Only Linux 64 bits supported.');
