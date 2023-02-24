@@ -41,6 +41,8 @@
 #define ARCH_CPU_PPC_FAMILY 1
 #elif defined(__mips__)
 #define ARCH_CPU_MIPS_FAMILY 1
+#elif defined(__loongarch__)
+#define ARCH_CPU_LOONGARCH_FAMILY 1
 #endif
 
 namespace leveldb {
@@ -116,6 +118,12 @@ inline void MemoryBarrier() {
 #elif defined(ARCH_CPU_MIPS_FAMILY) && defined(__GNUC__)
 inline void MemoryBarrier() {
   __asm__ __volatile__("sync" : : : "memory");
+}
+#define LEVELDB_HAVE_MEMORY_BARRIER
+
+#elif defined(ARCH_CPU_LOONGARCH_FAMILY) && defined(__GNUC__)
+inline void MemoryBarrier() {
+  __asm__ __volatile__("DBAR 0" : : : "memory");
 }
 #define LEVELDB_HAVE_MEMORY_BARRIER
 
