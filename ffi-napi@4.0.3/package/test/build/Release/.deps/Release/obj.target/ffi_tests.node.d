@@ -1,0 +1,1 @@
+cmd_Release/obj.target/ffi_tests.node := g++ -o Release/obj.target/ffi_tests.node -shared -pthread -rdynamic  -Wl,-soname=ffi_tests.node -Wl,--start-group Release/obj.target/ffi_tests/ffi_tests.o Release/obj.target/../node_modules/node-addon-api/nothing.a -Wl,--end-group -lnode

@@ -54,6 +54,7 @@ noinst_HEADERS = \
 	src/cris/ffitarget.h						\
 	src/frv/ffitarget.h						\
 	src/ia64/ffitarget.h src/ia64/ia64_flags.h			\
+	src/loongarch/ffitarget.h
 	src/m32r/ffitarget.h						\
 	src/m68k/ffitarget.h						\
 	src/m88k/ffitarget.h						\
@@ -82,7 +83,8 @@ EXTRA_libffi_la_SOURCES = src/aarch64/ffi.c src/aarch64/sysv.S \
 	src/arm/sysv.S src/arm/ffi.c src/arm/sysv_msvc_arm32.S \
 	src/avr32/ffi.c src/avr32/sysv.S src/bfin/ffi.c	\
 	src/bfin/sysv.S src/cris/ffi.c src/cris/sysv.S src/frv/ffi.c \
-	src/frv/eabi.S src/ia64/ffi.c src/ia64/unix.S src/m32r/ffi.c \
+	src/frv/eabi.S src/ia64/ffi.c src/ia64/unix.S src/loongarch/ffi.c \
+	src/loongarch/sysv.S src/m32r/ffi.c \
 	src/m32r/sysv.S src/m68k/ffi.c src/m68k/sysv.S src/m88k/ffi.c \
 	src/m88k/obsd.S src/metag/ffi.c src/metag/sysv.S \
 	src/microblaze/ffi.c src/microblaze/sysv.S src/mips/ffi.c \

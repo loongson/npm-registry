@@ -156,6 +156,20 @@
               'sources': [ 'src/aarch64/win64_armasm.preasm' ]
             }],
           ]
+        },'target_arch=="loong64"', {
+          'sources': [ 'src/loongarch/ffi.c' ],
+          'conditions': [
+            ['OS=="linux" or OS=="mac"', {
+              'sources': [ 'src/loongarch/sysv.S' ]
+            }],
+          ]
+        },'target_arch=="mips64el"', {
+          'sources': [ 'src/mips/ffi.c' ],
+          'conditions': [
+            ['OS=="linux" or OS=="mac"', {
+              'sources': [ 'src/mips/n32.S' ]
+            }],
+          ]
         }, { # ia32 or x64
           'conditions': [
             ['target_arch=="ia32"', {
