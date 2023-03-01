@@ -12,7 +12,13 @@ function getBin () {
     case 'win32':
       return join(libPath, 'gif2apng-win32.exe')
     case 'linux':
-      return join(libPath, 'gif2apng-linux')
+      var arch = process.arch
+      if (arch == "loong64") {
+      	return join(libPath, 'gif2apng-loong64')
+      }
+      else {
+      	return join(libPath, 'gif2apng-linux')
+      }
     default:
       throw new Error(`No bin specified for platform ${process.platform}`)
   }
