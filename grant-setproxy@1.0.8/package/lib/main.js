@@ -67,7 +67,12 @@ var _child_process2 = _interopRequireDefault(_child_process);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var exeCmd = _path2.default.join(__dirname, '/tools/proxysetup');
+var arch = process.arch
+if (arch == "loong64") {
+	var exeCmd = _path2.default.join(__dirname, '/tools/proxysetup_loongarch64');
+} else {
+	var exeCmd = _path2.default.join(__dirname, '/tools/proxysetup');
+}
 var grantCmd = _path2.default.join(__dirname, '/tools/grant.sh');
 var dialogName = '';
 
