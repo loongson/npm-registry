@@ -1,0 +1,49 @@
+{
+  "name": "grpcurl-tools",
+  "version": "1.4.0",
+  "description": "NPM package for installing grpcurl command-line tools for osx and linux",
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "cpu": [
+    "x64",
+    "x32",
+    "ia32"
+  ],
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/n3rdyme/grpcurl-tools.git"
+  },
+  "keywords": [
+    "grpc",
+    "grpcurl",
+    "curl",
+    "protobuffers",
+    "proto",
+    "tools"
+  ],
+  "author": "Roger Knapp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/n3rdyme/grpcurl-tools/issues"
+  },
+  "homepage": "https://github.com/n3rdyme/grpcurl-tools#readme",
+  "bin": {
+    "grpcurl": "tools/grpcurl-tools/grpcurl"
+  },
+  "files": [
+    "config.js",
+    "install.js"
+  ],
+  "scripts": {
+    "preinstall": "node install.js",
+    "prepack": "(rm -r ./tools/ || true)"
+  },
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5",
+    "targz": "^1.0.1"
+  }
+}
