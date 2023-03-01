@@ -1,0 +1,42 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build_and_test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        node_version: ['12', '14']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - uses: actions/setup-node@v2
+        with:
+          node-version:  ${{ matrix.node_version }}
+      - name:  Install
+        shell: pwsh
+        run: |
+          if ($env:RUNNER_OS -eq "Linux")
+          {
+            sudo apt-get install -y libsqlite3-dev
+          } elseif ($env:RUNNER_OS -eq "Windows") {
+            choco install -y --no-progress sqlite
+          } else {
+            echo "OS: $env:RUNNER_OS not installing"
+          }
+      - name: Npm Install dependencies and test
+        shell: pwsh
+        run: |
+          npm install -g node-gyp
+          npm install
+          npm run test:full
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

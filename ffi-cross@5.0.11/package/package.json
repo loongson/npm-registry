@@ -1,0 +1,68 @@
+{
+  "name": "ffi-cross",
+  "version": "5.0.11",
+  "license": "MIT",
+  "author": "Yonggang Luo <luoyonggang@gmail.com>",
+  "contributors": [
+    "Anna Henningsen <anna@addaleax.net>",
+    "Rick Branson <rick@diodeware.com>",
+    "Nathan Rajlich <nathan@tootallnate.net>",
+    "Gabor Mezo <gabor.mezo@outlook.com>"
+  ],
+  "description": "A foreign function interface (FFI) for Node.js/QuickJs/JerryScript, N-API style",
+  "keywords": [
+    "foreign",
+    "function",
+    "interface",
+    "ffi",
+    "ffi-napi",
+    "ffi-cross",
+    "js-ffi-cross",
+    "libffi",
+    "binding",
+    "c",
+    "napi",
+    "stable"
+  ],
+  "homepage": "http://github.com/ffi-cross/js-ffi-cross",
+  "engines": {
+    "node": ">=12"
+  },
+  "main": "./lib/ffi",
+  "types": "types/index.d.ts",
+  "dependencies": {
+    "array-index": "^1.0.0",
+    "debug": "^4.3.4",
+    "node-addon-api": "^5.0.0",
+    "node-gyp-build": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.31",
+    "fs-extra": "^10.1.0",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4",
+    "weak-napi": "^2.0.2"
+  },
+  "scripts": {
+    "install": "node-gyp-build",
+    "test:cov": "nyc --reporter=lcov node --expose-gc node_modules/mocha/bin/mocha --reporter spec",
+    "test": "node --expose-gc node_modules/mocha/bin/mocha --reporter spec",
+    "test:full": "npm run test:build && npm run test:cov && npm run ts-test",
+    "mocha": "mocha",
+    "test:build": "node-gyp rebuild --directory test",
+    "ts-node": "ts-node",
+    "ts-test": "node -r ts-node/register ./test/typescript/ffi-napi-tests.ts"
+  },
+  "mocha": {
+    "spec": "test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/ffi-cross/js-ffi-cross.git"
+  },
+  "bugs": {
+    "url": "http://github.com/ffi-cross/js-ffi-cross/issues"
+  }
+}
