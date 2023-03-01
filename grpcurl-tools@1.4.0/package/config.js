@@ -2,13 +2,14 @@ const path = require('path');
 const { name, version } = require('./package.json');
 
 // github project
-const project = 'fullstorydev/grpcurl';
+const project = 'hankinsea/grpcurl';
 
 const platform = {
   darwin_x32: 'osx_x86_32',
   darwin_x64: 'osx_x86_64',
   linux_x32: 'linux_x86_32',
   linux_x64: 'linux_x86_64',
+  linux_loong64: 'linux_loongarch64',
   // win32_x32: 'win32',
   // win32_x64: 'win64',
 }[`${process.platform}_${process.arch === 'ia32' ? 'x32' : process.arch}`];

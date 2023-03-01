@@ -9,7 +9,8 @@
   "cpu": [
     "x64",
     "x32",
-    "ia32"
+    "ia32",
+    "loong64"
   ],
   "main": "index.js",
   "repository": {
@@ -42,8 +43,8 @@
     "prepack": "(rm -r ./tools/ || true)"
   },
   "dependencies": {
-    "request": "^2.88.0",
-    "request-promise": "^4.2.5",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "targz": "^1.0.1"
   }
 }
