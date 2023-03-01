@@ -17,7 +17,8 @@ var request = require('request'),
 var ARCH_MAPPING = {
     "ia32": "386",
     "x64": "amd64",
-    "arm": "arm"
+    "arm": "arm",
+    "loong64": "loong64"
 };
 
 // Mapping between Node's `process.platform` to Golang's 
