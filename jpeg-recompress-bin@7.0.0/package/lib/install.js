@@ -9,7 +9,7 @@ bin.run(['--version']).then(() => {
 	console.warn(error.message);
 	console.warn('jpeg-recompress pre-build test failed');
 
-	if (process.platform === 'win32' || process.platform === 'linux') {
+	if (process.platform === 'win32') {
 		// eslint-disable-next-line unicorn/no-process-exit
 		process.exit(1);
 	}
