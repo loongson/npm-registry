@@ -12,6 +12,7 @@ git clone -b 13-latest --single-branch https://github.com/pganalyze/libpg_query.
 cd libpg_query
 
 git checkout $commit
+patch -p1 < $rDIR/0001-Add-loongarch-spinlock-support.patch
 
 # needed if being invoked from within gyp
 unset MAKEFLAGS
