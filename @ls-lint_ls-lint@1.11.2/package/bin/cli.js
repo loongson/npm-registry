@@ -38,6 +38,8 @@ function getPlatformPath() {
           return 'ls-lint-linux';
         case 'arm64':
           return 'ls-lint-linux-arm64';
+        case 'loong64':
+          return 'ls-lint-linux-loong64';
         default:
           console.log('ls-lint builds are not available on platform: ' + process.platform + ' arch: ' + process.arch);
           process.exit(1);
