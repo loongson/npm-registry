@@ -76,7 +76,7 @@ if [ $PIP_VERSION -lt 7 ]; then
   TRUSTED_HOST=""
 fi;
 
-virtualenv --python=$USE_PYTHON --no-site-packages $PWD/venv
+virtualenv --python=$USE_PYTHON $PWD/venv
 source ./venv/bin/activate
 cd host/python/runner-service
 pip install \
