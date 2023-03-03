@@ -97,6 +97,33 @@
                     ]
                   }
                 ]
+              }],
+              ['target_arch=="loong64"', {
+                "cflags_cc!": [
+                  "-fno-rtti",
+                  "-fno-exceptions"
+                ],
+                "cflags_cc": [
+                  "-std=c++11",
+                  "-fexceptions"
+                ],
+                "link_settings": {
+                  "libraries": [
+                    "<@(module_root_dir)/build/Release/libportaudio.so.2" 
+                  ],
+                  "ldflags": [
+                    "-L<@(module_root_dir)/build/Release",
+                    "-Wl,-rpath,<@(module_root_dir)/build/Release"
+                  ]
+                },
+                "copies": [
+                  {
+                    "destination": "build/Release/",
+                    "files": [
+                      "<@(module_root_dir)/portaudio/bin_loong64/libportaudio.so.2"
+                    ]
+                  }
+                ]
               },
               { # ia32 or x64
                 "cflags_cc!": [
