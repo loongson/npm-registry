@@ -40,6 +40,8 @@ function getArchitecture() {
             return 'aarch64';
         case 's390':
             return 's390x';
+        case 'loong64':
+            return 'loongarch64';
         default:
             throw new Error('Unsupported architecture');
     }
