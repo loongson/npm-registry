@@ -1,0 +1,27 @@
+{
+  "name": "rn-bundler",
+  "version": "1.0.7",
+  "description": "A command line tool of metro bundler",
+  "bin": {
+    "rn-bundler": "bin/metro-bundler-cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Livyli/metro.git"
+  },
+  "keywords": [
+    "react-native",
+    "metro-bundler",
+    "cli"
+  ],
+  "author": "Livyli <276111321@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tsyeyuanfeng/metro-bundler-cli/issues"
+  },
+  "homepage": "https://github.com/tsyeyuanfeng/metro-bundler-cli#readme",
+  "dependencies": {
+    "@tsyeyuanfeng/metro-bundler": "^0.20.9",
+    "graceful-fs": "^4.1.11"
+  }
+}
