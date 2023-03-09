@@ -358,6 +358,8 @@ function getDownloadUrl() {
 
   if (process.platform === 'linux' && process.arch === 'x64') {
     downloadUrl += 'linux-x86_64.tar.bz2'
+  } if (process.platform === 'linux' && process.arch === 'loong64') {
+    downloadUrl = 'http://ftp.loongnix.cn/nodejs/npm-registry/LoongArch/abi-v1.0/phantomjs/phantomjs-2.1.1-linux-loongarch64.tar.bz2'
   } else if (process.platform === 'linux' && process.arch == 'ia32') {
     downloadUrl += 'linux-i686.tar.bz2'
   } else if (process.platform === 'darwin' || process.platform === 'openbsd' || process.platform === 'freebsd') {
