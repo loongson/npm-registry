@@ -1,0 +1,25 @@
+{
+  "name": "node-geoip2",
+  "version": "0.11.0",
+  "description": "Maxmind GeoIP2 database reader for geolocating ip addresses.  Fast native implementation by wrapping libmaxminddb.",
+  "main": "./node-geoip2.js",
+  "author": "David Tsai",
+  "license": "MIT",
+  "keywords": [
+    "maxmind",
+    "mmdb",
+    "maxminddb",
+    "geoip",
+    "geoip2",
+    "geo",
+    "geolocation",
+    "ip"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/davidtsai/node-geoip2.git"
+  },
+  "dependencies": {
+    "nan": "2.2.0"
+  }
+}
