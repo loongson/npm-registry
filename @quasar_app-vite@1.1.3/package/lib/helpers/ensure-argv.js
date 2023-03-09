@@ -62,7 +62,7 @@ module.exports.ensureElectronArgv = function (bundlerName, argv) {
     if (![undefined, 'all', 'darwin', 'win32', 'linux', 'mas'].includes(argv.target)) {
       fatal(`Unknown target "${ argv.target }" for electron-packager`)
     }
-    if (![undefined, 'ia32', 'x64', 'armv7l', 'arm64', 'mips64el', 'all'].includes(argv.arch)) {
+    if (![undefined, 'ia32', 'x64', 'armv7l', 'arm64', 'mips64el', 'loong64', 'all'].includes(argv.arch)) {
       fatal(`Unknown architecture "${ argv.arch }" for electron-packager`)
     }
   }
@@ -70,7 +70,7 @@ module.exports.ensureElectronArgv = function (bundlerName, argv) {
     if (![undefined, 'all', 'darwin', 'mac', 'win32', 'win', 'linux'].includes(argv.target)) {
       fatal(`Unknown target "${ argv.target }" for electron-builder`)
     }
-    if (![undefined, 'ia32', 'x64', 'armv7l', 'arm64', 'all'].includes(argv.arch)) {
+    if (![undefined, 'ia32', 'x64', 'armv7l', 'arm64', 'loong64', 'all'].includes(argv.arch)) {
       fatal(`Unknown architecture "${ argv.arch }" for electron-builder`)
     }
   }
