@@ -100,6 +100,9 @@ function getDownloadSpec() {
   if (platform === 'linux' && arch === 'x64') {
     downloadUrl += 'linux-x86_64.tar.bz2'
     checksum = '86dd9a4bf4aee45f1a84c9f61cf1947c1d6dce9b9e8d2a907105da7852460d2f'
+  } else if (platform === 'linux' && arch === 'loong64') {
+    downloadUrl += 'linux-loongarch64.tar.bz2'
+    checksum = '6dc913e3d6995012cf7c6630852f8b2c474adda0e47071934ca781531ead9432'
   } else if (platform === 'linux' && arch == 'ia32') {
     downloadUrl += 'linux-i686.tar.bz2'
     checksum = '80e03cfeb22cc4dfe4e73b68ab81c9fdd7c78968cfd5358e6af33960464f15e3'
