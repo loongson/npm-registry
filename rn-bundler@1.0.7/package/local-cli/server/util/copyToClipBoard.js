@@ -13,8 +13,14 @@ var spawn = child_process.spawn;
 var path = require('path');
 var fs  = require('fs');
 
-const xsel = path.join(__dirname, 'external/xsel');
-fs.chmodSync(xsel, '0755');
+var arch = process.arch;
+if (arch == 'loong64') {
+	const xsel = path.join(__dirname, 'external/xsel_loongarch64');
+	fs.chmodSync(xsel, '0755');
+} else {
+	const xsel = path.join(__dirname, 'external/xsel');
+	fs.chmodSync(xsel, '0755');
+}
 /**
  * Copy the content to host system clipboard.
  */
