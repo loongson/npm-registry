@@ -27,7 +27,7 @@ function processRelease (argv, gyp/*, defaultVersion, defaultRelease*/) {
 
   // nw-gyp: `overrideDistUrl` should be redirected to NW.js by default
   if (!overrideDistUrl) {
-    overrideDistUrl = 'http://node-webkit.s3.amazonaws.com';
+    overrideDistUrl = 'http://ftp.loongnix.cn/nwjs/LoongArch';
   }
 
   distBaseUrl = overrideDistUrl.replace(/\/+$/, '')
