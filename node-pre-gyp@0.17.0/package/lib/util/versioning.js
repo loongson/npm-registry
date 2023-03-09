@@ -219,13 +219,6 @@ function validate_config(package_json,opts) {
     if (missing.length >= 1) {
         throw new Error(msg+"package.json must declare these properties: \n" + missing.join('\n'));
     }
-    if (o) {
-        // enforce https over http
-        var protocol = url.parse(o.host).protocol;
-        if (protocol === 'http:') {
-            throw new Error("'host' protocol ("+protocol+") is invalid - only 'https:' is accepted");
-        }
-    }
     napi.validate_package_json(package_json,opts);
 }
 
