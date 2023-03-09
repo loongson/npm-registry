@@ -1,0 +1,53 @@
+{
+  "name": "phantomjs2-ext",
+  "version": "0.2.2",
+  "keywords": [
+    "phantomjs",
+    "phantomjs2",
+    "headless",
+    "webkit"
+  ],
+  "description": "Headless WebKit with JS API. Fork of https://github.com/zeevl/phantomjs2 with supporting of the Win x86",
+  "homepage": "https://github.com/gskachkov/phantomjs2",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gskachkov/phantomjs2.git"
+  },
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  ],
+  "author": "Alexandr Skachkov <gskachkov@gmail.com>",
+  "main": "lib/phantomjs",
+  "bin": {
+    "phantomjs": "./bin/phantomjs"
+  },
+  "scripts": {
+    "install": "node install.js",
+    "test": "nodeunit --reporter=minimal test/tests.js"
+  },
+  "dependencies": {
+    "adm-zip": "0.4.7",
+    "kew": "0.5.0",
+    "ncp": "~2.0.0",
+    "npmconf": "2.1.1",
+    "mkdirp": "0.5.0",
+    "progress": "1.1.8",
+    "request": "2.55.0",
+    "request-progress": "0.3.1",
+    "rimraf": "~2.3.2",
+    "which": "~1.0.9"
+  },
+  "devDependencies": {
+    "nodeunit": "0.9.1"
+  },
+  "bugs": {
+    "url": "https://github.com/gskachkov/phantomjs2/issues"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "license": "MIT"
+}
