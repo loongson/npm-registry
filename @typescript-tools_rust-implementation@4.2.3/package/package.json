@@ -1,0 +1,34 @@
+{
+  "name": "@typescript-tools/rust-implementation",
+  "version": "4.2.3",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "url": "https://github.com/typescript-tools/rust-implementation"
+  },
+  "bin": {
+    "monorepo": "./bin/monorepo"
+  },
+  "scripts": {
+    "postinstall": "node npm/install.js"
+  },
+  "dependencies": {
+    "axios": "0.27.2",
+    "rimraf": "3.0.2",
+    "tar": "6.1.11"
+  },
+  "devDependencies": {
+    "@codedependant/semantic-release-docker": "4.1.0",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/github": "8.0.4",
+    "@semantic-release/npm": "9.0.1",
+    "semantic-release": "19.0.3",
+    "standard-version": "9.5.0"
+  },
+  "files": [
+    "bin/",
+    "npm/"
+  ]
+}
