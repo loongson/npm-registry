@@ -1,0 +1,31 @@
+{
+  "name": "wrappa-core",
+  "version": "1.0.3",
+  "description": "Core modules for NodeJS, wrapped.",
+  "main": "core.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "mocha": "node_modules\\.bin\\mocha.cmd"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wrappa/Core.git"
+  },
+  "keywords": [
+    "Core",
+    "NodeJS"
+  ],
+  "author": "Joshua Crowe, Apprentice Web & Database Developer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Wrappa/Core/issues"
+  },
+  "homepage": "https://github.com/Wrappa/Core#readme",
+  "devDependencies": {
+    "mocha": "^3.5.0"
+  },
+  "dependencies": {
+    "graceful-fs": "^4.1.11",
+    "mkdirp": "^0.5.1"
+  }
+}
