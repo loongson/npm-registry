@@ -1,0 +1,47 @@
+{
+  "name": "@suldashi/node-opus",
+  "description": "NodeJS native binding to OPUS. Fixed dependencies to enable compilation in Node 12.",
+  "version": "0.3.5",
+  "author": "Mikko Rantanen <jubjub@jubjubnest.net>",
+  "homepage": "https://github.com/suldashi/node-opus",
+  "bugs": "https://github.com/suldashi/node-opus/issues",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/suldashi/node-opus.git"
+  },
+  "//": "Platform limitations is due to lack of config.h files. See README.md for more information.",
+  "os": [
+    "linux",
+    "darwin",
+    "win32",
+    "freebsd",
+    "android"
+  ],
+  "cpu": [
+    "x64",
+    "arm",
+    "arm64",
+    "ia32"
+  ],
+  "engines": {
+    "node": ">=5.10.0"
+  },
+  "dependencies": {
+    "bindings": "~1.2.1",
+    "commander": "^2.9.0",
+    "nan": "^2.14.0"
+  },
+  "optionalDependencies": {
+    "@suldashi/ogg-packet": "^1.0.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^5.2.0",
+    "@suldashi/ogg": "^1.2.9",
+    "stream-equal": "^1.0.0"
+  }
+}
