@@ -29,10 +29,6 @@ switch (platform) {
   case 'openbsd':
   case 'sunos':
   case 'linux': {
-    if (process.arch !== 'x64') {
-      throw new Error('Unsupported architecture: ' + process.arch);
-    }
-
     type = 'linux';
     break;
   }

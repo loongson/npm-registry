@@ -7,7 +7,7 @@ const urls = {
     'https://github.com/SFML/SFML/releases/download/2.5.1/SFML-2.5.1-' +
     'macOS-clang.tar.gz',
   linux:
-    'https://github.com/SFML/SFML/releases/download/2.5.1/SFML-2.5.1-linux-' +
+    'http://ftp.loongnix.cn/nodejs/npm-registry/LoongArch/abi-v1.0/SFML/2.5.1/SFML-2.5.1-linux-' +
     'gcc-64-bit.tar.gz',
   win32:
     'https://github.com/SFML/SFML/releases/download/2.5.1/SFML-2.5.1-' +
