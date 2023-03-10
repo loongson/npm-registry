@@ -72,6 +72,7 @@ class System {
       case "x86":
       case "x32": return "32-Bit"
       case "arm64":
+      case "loong64":
       case "x64": return "64-Bit"
     }
   }
