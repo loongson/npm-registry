@@ -6,6 +6,7 @@ const knownUnixLikePackages = {
   'linux ia32 LE': 'i686-unknown-linux-musl',
   'darwin x64 LE': 'x86_64-apple-darwin',
   'linux arm64 LE': 'aarch64-unknown-linux-musl',
+  'linux loong64 LE': 'loongarch64-unknown-linux-musl',
   'darwin arm64 LE': 'aarch64-apple-darwin',
 }
 
