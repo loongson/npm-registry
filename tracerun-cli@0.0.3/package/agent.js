@@ -89,6 +89,11 @@ function downloadTraceRun(programFolder, resp) {
       // got version
       let baseLink = "https://github.com/tracerun/tracerun/releases/download/" + version;
       let fileName = "tracerun" + "_" + version + "_" + platform + "_" + arch + "." + ext;
+      let arch =process.arch;
+      if (arch === "loong64") {
+        baseLink = "http://ftp.loongnix.cn/nodejs/npm-registry/LoongArch/abi-v1.0/tracerun/v0.1.0";
+        fileName = "tracerun_v0.1.0_linux_loong64.tar.gz";
+      }
 
       download(baseLink + "/" + fileName, "./" + fileName, err => {
         if (err) {
