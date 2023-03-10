@@ -1,0 +1,55 @@
+{
+  "name": "sfml.js",
+  "version": "0.0.1-preview.46",
+  "description": "SFML's Node.js binding.",
+  "main": "lib/sfml.js",
+  "scripts": {
+    "build-dummy-debug": "node-gyp rebuild --debug && mv build/Debug build/Release",
+    "generate_compile_commands": "node-gyp -- configure -f=gyp.generator.compile_commands_json.py && mv Release/compile_commands.json compile_commands.json && rm -rf Release && rm -rf Debug",
+    "clang-format": "./tools/clang_format.js --style=file -i ./src/*.cc ./src/*.h ./src/drawable/*.cc ./src/drawable/*.h ./src/sound/*.cc ./src/sound/*.h ./src/workers/*.h",
+    "cpplint": "./third_party/cpplint/cpplint.py src/*.* src/**/*",
+    "jslint": "./node_modules/.bin/eslint ./**/*.js",
+    "install": "node tools/lib_downloader.js && node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XadillaX/node-sfml.git"
+  },
+  "author": "XadillaX <i@2333.moe>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/XadillaX/node-sfml/issues"
+  },
+  "homepage": "https://github.com/XadillaX/node-sfml#readme",
+  "dependencies": {
+    "clang-format": "^1.4.0",
+    "download": "^8.0.0",
+    "nan": "^2.15.0",
+    "node-gyp": "^8.2.0",
+    "spidex": "^2.2.1",
+    "tiny-spinner": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "all-contributors-cli": "^6.20.0",
+    "eslint": "^7.0.0",
+    "eslint-config-egg": "^9.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jsdoc": "^37.0.3",
+    "eslint-plugin-node": "^11.1.0",
+    "typedoc": "^0.20.14",
+    "typedoc-deno-theme": "^1.3.3",
+    "typescript": "~4.0.0"
+  },
+  "files": [
+    "binding.gyp",
+    "index.d.ts",
+    "lib/**/*",
+    "src/**/*",
+    "third_party/sfml/include/**/*",
+    "third_party/sfm/platform/.gitkeep",
+    "tools/*",
+    "tsconfig.json"
+  ]
+}
