@@ -1,0 +1,51 @@
+{
+	"name": "@typescord/opus",
+	"version": "0.5.0",
+	"description": "Opus bindings for Node",
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"author": "Mestery <mestery@hey.com>",
+	"license": "MIT",
+	"engines": {
+		"node": ">=12.0.0"
+	},
+	"scripts": {
+		"install": "node-pre-gyp install --fallback-to-build",
+		"build": "node-pre-gyp install build package"
+	},
+	"keywords": [
+		"native",
+		"opus",
+		"module",
+		"c",
+		"c++",
+		"bindings",
+		"binary"
+	],
+	"homepage": "https://github.com/typescord/opus#readme",
+	"bugs": {
+		"url": "https://github.com/typescord/opus/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/typescord/opus.git"
+	},
+	"dependencies": {
+		"@discordjs/node-pre-gyp": "^0.2.0",
+		"node-addon-api": "^3.1.0"
+	},
+	"devDependencies": {
+		"node-gyp": "^7.1.2",
+		"typescript": "^4.1.3"
+	},
+	"binary": {
+		"module_name": "opus",
+		"module_path": "./prebuild/{node_abi}-napi-v{napi_build_version}-{platform}-{arch}-{libc}-{libc_version}/",
+		"remote_path": "v{version}",
+		"package_name": "{module_name}-v{version}-{node_abi}-napi-v{napi_build_version}-{platform}-{arch}-{libc}-{libc_version}.tar.gz",
+		"host": "https://github.com/typescord/opus/releases/download/",
+		"napi_versions": [
+			3
+		]
+	}
+}
